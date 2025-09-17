@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expantanum Calculator</title>
+    
+    <!-- miniature expanta lol -->
+    <script src="miniexpantaCOPY.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e0e0e0;
+        }
+
+        .container {
+            background: rgba(35, 35, 35, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            min-width: 550px;
+            text-align: center;
+            border: 1px solid #3a3a3a;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #888888, #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .display {
+            background: #0f0f0f;
+            border: 2px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #00ff88;
+            word-break: break-all;
+            margin-bottom: 10px;
+            max-width: 100%;
+            overflow-wrap: break-word;
+        }
+
+        .notation {
+            font-size: 0.9em;
+            color: #999;
+        }
+
+        .arrow-count {
+            font-size: 1em;
+            color: #ffaa00;
+            margin-top: 5px;
+        }
+
+        .k-value {
+            font-size: 1em;
+            color: #88ccff;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+            color: #d0d0d0;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(135deg, #333333, #444444);
+            border-color: #555;
+            color: #ffffff;
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #222222, #333333);
+        }
+
+        .arrow-btn {
+            background: linear-gradient(135deg, #2a2835, #3a3845);
+            border-color: #4a4855;
+        }
+
+        .arrow-btn:hover {
+            background: linear-gradient(135deg, #3a3845, #4a4855);
+            border-color: #5a5865;
+        }
+
+        .reset-btn {
+            grid-column: span 3;
+            background: linear-gradient(135deg, #3a2a2a, #4a3030);
+            border-color: #5a3535;
+        }
+
+        .reset-btn:hover {
+            background: linear-gradient(135deg, #4a3030, #5a3535);
+            border-color: #6a4040;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 10px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .input-section h3 {
+            margin-bottom: 15px;
+            color: #00ff88;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 1em;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #555;
+            background: #222;
+        }
+
+        select {
+            padding: 10px;
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        select:hover {
+            background: #222;
+            border-color: #444;
+        }
+
+        .small-btn {
+            padding: 10px 15px;
+            font-size: 0.9em;
+            min-width: 80px;
+        }
+
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #999;
+            border: 1px solid #2a2a2a;
+        }
+
+        .operation-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            border-radius: 5px;
+            color: #00ff88;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .operation-indicator.show {
+            opacity: 1;
+        }
+
+        /* Popup Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+            margin: 15% auto;
+            padding: 30px;
+            border: 2px solid #ff4444;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.3);
+            animation: slideIn 0.3s;
+        }
+
+        .modal-content h2 {
+            color: #ff6666;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            background: linear-gradient(135deg, #4a3030, #5a3535);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .close-modal:hover {
+            background: linear-gradient(135deg, #5a3535, #6a4040);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expantanum Calculator</h1>
+        
+        <div class="display">
+            <div class="value" id="valueDisplay">10</div>
+            <div class="notation" id="notationDisplay">Standard: 10</div>
+            <div class="arrow-count" id="arrowDisplay">Arrows: 0</div>
+            <div class="k-value" id="kDisplay">K Value: 0</div>
+        </div>
+
+        <div class="input-section">
+            <h3>Set Number</h3>
+            <div class="input-group">
+                <select id="formatSelect">
+                    <option value="X">X (Direct)</option>
+                    <option value="XeY">XeY (Scientific)</option>
+                    <option value="XeeY">XeeY (Double Exp)</option>
+                    <option value="10^^X">10^^X (Tetration)</option>
+                    <option value="10^^^X">10^^^X (Pentation)</option>
+                    <option value="X{N}Y">X{N}Y (General)</option>
+                </select>
+                <input type="text" id="xInput" placeholder="X value" value="10">
+                <input type="text" id="yInput" placeholder="Y value" style="display:none;" value="2">
+                <input type="text" id="nInput" placeholder="N value (arrows)" style="display:none;" value="2">
+                <button class="small-btn" onclick="setNumber()">Set</button>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <h3>Set Arrows</h3>
+            <div class="input-group">
+                <select id="arrowFormatSelect">
+                    <option value="X">X (Direct)</option>
+                    <option value="XeY">XeY (Scientific)</option>
+                    <option value="XeeY">XeeY (Double Exp)</option>
+                </select>
+                <input type="text" id="arrowXInput" placeholder="X value" value="1">
+                <input type="text" id="arrowYInput" placeholder="Y value" style="display:none;" value="0">
+                <button class="small-btn" onclick="setArrows()">Set</button>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <h3>Set K Value</h3>
+            <div class="input-group">
+                <input type="text" id="kInput" placeholder="Enter K value" value="0">
+                <button class="small-btn" onclick="setKValue()">Set K</button>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button onclick="exponentiate()">
+                Exponentiate (x²)
+            </button>
+            <button onclick="tetrate()">
+                Tetrate (x^^2)
+            </button>
+            <button onclick="pentrate()">
+                Pentrate (x^^^2)
+            </button>
+            <button class="arrow-btn" onclick="addArrow()">
+                Add Arrow (^)
+            </button>
+            <button onclick="executeArrows()">
+                Execute Arrows
+            </button>
+            <button onclick="clearArrows()">
+                Clear Arrows
+            </button>
+            <button class="reset-btn" onclick="reset()">
+                Reset All
+            </button>
+        </div>
+        
+        <div class="info">
+            <p><strong>Exponentiate:</strong> Squares the number (x²)</p>
+            <p><strong>Tetrate:</strong> Performs tetration with height 2 (x^^2)</p>
+            <p><strong>Pentrate:</strong> Performs pentation with height 2 (x^^^2)</p>
+            <p><strong>Set Arrows:</strong> Set custom arrow count for operations</p>
+            <p><strong>Set K:</strong> Set K value for advanced operations</p>
+            <p>Using Expantanum.js for extreme precision!</p>
+        </div>
+    </div>
+    
+    <div class="operation-indicator" id="indicator"></div>
+
+    <!-- Infinity Limit Modal -->
+    <div id="infinityModal" class="modal">
+        <div class="modal-content">
+            <h2>⚠️ Limit Reached!</h2>
+            <p>The number has reached Infinity - the maximum limit this calculator can handle.</p>
+            <p>Current value: <span id="modalValue"></span></p>
+            <button class="close-modal" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Check if Expantanum is loaded
+        if (typeof Expantanum === 'undefined') {
+            console.error('Expantanum not loaded!');
+            alert('Error: Expantanum library not loaded. Please refresh the page.');
+        }
+
+        // Initialize with Expantanum
+        let currentValue = new Expantanum(10);
+        let arrowCount = 0;
+        let kValue = 0;
+        
+        // Check for infinity
+        function checkInfinity(value) {
+            const str = value.toString();
+            if (str === "Infinity" || str.includes("Infinity") || !isFinite(value.toNumber())) {
+                showInfinityModal(str);
+                return true;
+            }
+            return false;
+        }
+        
+        // Show infinity modal
+        function showInfinityModal(valueStr) {
+            document.getElementById('infinityModal').style.display = 'block';
+            document.getElementById('modalValue').textContent = valueStr;
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('infinityModal').style.display = 'none';
+        }
+        
+        // Update display function
+        function updateDisplay() {
+            const display = document.getElementById('valueDisplay');
+            const notation = document.getElementById('notationDisplay');
+            const arrowDisplay = document.getElementById('arrowDisplay');
+            const kDisplay = document.getElementById('kDisplay');
+            
+            try {
+                // Check for infinity
+                checkInfinity(currentValue);
+                
+                // Display the value
+                let displayText = currentValue.toString();
+                display.textContent = displayText;
+                
+                // Show different notations based on value size
+                if (currentValue.lt(1e6)) {
+                    let num = currentValue.toNumber();
+                    if (!isNaN(num) && isFinite(num)) {
+                        notation.textContent = `Standard: ${num.toFixed(2)}`;
+                    } else {
+                        notation.textContent = `Value: ${displayText}`;
+                    }
+                } else if (currentValue.lt("1e1000")) {
+                    notation.textContent = `Scientific: ${displayText}`;
+                } else if (currentValue.lt("10^^5")) {
+                    notation.textContent = `Large Number: ${displayText}`;
+                } else {
+                    notation.textContent = `Extreme Value`;
+                }
+            } catch (e) {
+                console.error('Display error:', e);
+                display.textContent = 'Display Error';
+                notation.textContent = 'Error displaying number';
+            }
+            
+            arrowDisplay.textContent = `Arrows: ${arrowCount}`;
+            kDisplay.textContent = `K Value: ${kValue}`;
+        }
+        
+        // Exponentiate function (x^2)
+        function exponentiate() {
+            try {
+                currentValue = currentValue.pow(2);
+                updateDisplay();
+                showIndicator('Squared!');
+            } catch (e) {
+                console.error('Exponentiation error:', e);
+                showIndicator('Error: Number too large', true);
+            }
+        }
+        
+        // Tetrate function (tetration with height 2)
+        function tetrate() {
+            try {
+                currentValue = currentValue.tetrate(2);
+                updateDisplay();
+                showIndicator('Tetrated!');
+            } catch (e) {
+                console.error('Tetration error:', e);
+                showIndicator('Error: Number too large', true);
+            }
+        }
+        
+        // Pentrate function (pentation with height 2)
+        function pentrate() {
+            try {
+                currentValue = currentValue.pentate(2);
+                updateDisplay();
+                showIndicator('Pentrated!');
+            } catch (e) {
+                console.error('Pentation error:', e);
+                showIndicator('Error: Number too large', true);
+            }
+        }
+        
+        // Add arrow function
+        function addArrow() {
+            arrowCount++;
+            updateDisplay();
+            showIndicator(`Added arrow! Total: ${arrowCount}`);
+        }
+        
+        // Clear arrows
+        function clearArrows() {
+            arrowCount = 0;
+            updateDisplay();
+            showIndicator('Arrows cleared!');
+        }
+        
+        // Set arrows from input
+        function setArrows() {
+            const format = document.getElementById('arrowFormatSelect').value;
+            const xValue = document.getElementById('arrowXInput').value || "1";
+            const yValue = document.getElementById('arrowYInput').value || "0";
+            
+            try {
+                let newArrowCount = 0;
+                
+                switch(format) {
+                    case 'X':
+                        newArrowCount = parseInt(xValue);
+                        break;
+                    case 'XeY':
+                        newArrowCount = parseFloat(xValue) * Math.pow(10, parseFloat(yValue));
+                        break;
+                    case 'XeeY':
+                        newArrowCount = parseFloat(xValue) * Math.pow(10, Math.pow(10, parseFloat(yValue)));
+                        break;
+                }
+                
+                if (isNaN(newArrowCount) || newArrowCount < 0) {
+                    showIndicator('Invalid arrow count', true);
+                    return;
+                }
+                
+                arrowCount = Math.floor(newArrowCount);
+                updateDisplay();
+                showIndicator(`Arrows set to ${arrowCount}`);
+            } catch (e) {
+                console.error('Set arrows error:', e);
+                showIndicator('Error setting arrows', true);
+            }
+        }
+        
+        // Set K value
+        function setKValue() {
+            const input = document.getElementById('kInput').value;
+            
+            try {
+                const newK = parseFloat(input);
+                if (isNaN(newK)) {
+                    showIndicator('Invalid K value', true);
+                    return;
+                }
+                
+                kValue = newK;
+                // Apply K value to current number if needed
+                if (kValue !== 0) {
+                    currentValue = currentValue.mul(new Expantanum(10).pow(kValue));
+                }
+                updateDisplay();
+                showIndicator(`K value set to ${kValue}`);
+            } catch (e) {
+                console.error('Set K error:', e);
+                showIndicator('Error setting K value', true);
+            }
+        }
+        
+        // Execute arrows (perform operation based on arrow count)
+        function executeArrows() {
+            if (arrowCount === 0) {
+                showIndicator('No arrows to execute', true);
+                return;
+            }
+            
+            try {
+                if (arrowCount === 1) {
+                    currentValue = currentValue.pow(2);
+                    showIndicator('Executed: x^2');
+                } else if (arrowCount === 2) {
+                    currentValue = currentValue.tetrate(2);
+                    showIndicator('Executed: x^^2');
+                } else if (arrowCount === 3) {
+                    currentValue = currentValue.pentate(2);
+                    showIndicator('Executed: x^^^2');
+                } else {
+                    // For more arrows, use arrow notation
+                    currentValue = currentValue.arrow(arrowCount, 2);
+                    showIndicator(`Executed: x${"^".repeat(arrowCount)}2`);
+                }
+                arrowCount = 0;
+                updateDisplay();
+            } catch (e) {
+                console.error('Arrow execution error:', e);
+                showIndicator('Error: Operation too large', true);
+            }
+        }
+        
+        // Set number function
+        function setNumber() {
+            const format = document.getElementById('formatSelect').value;
+            const xValue = document.getElementById('xInput').value || "10";
+            const yValue = document.getElementById('yInput').value || "2";
+            const nValue = document.getElementById('nInput').value || "2";
+            
+            try {
+                switch(format) {
+                    case 'X':
+                        currentValue = new Expantanum(xValue);
+                        break;
+                    case 'XeY':
+                        currentValue = new Expantanum(xValue).mul(new Expantanum(10).pow(new Expantanum(yValue)));
+                        break;
+                    case 'XeeY':
+                        currentValue = new Expantanum(xValue).mul(new Expantanum(10).pow(new Expantanum(10).pow(new Expantanum(yValue))));
+                        break;
+                    case '10^^X':
+                        currentValue = new Expantanum(10).tetrate(parseFloat(xValue));
+                        break;
+                    case '10^^^X':
+                        currentValue = new Expantanum(10).pentate(parseFloat(xValue));
+                        break;
+                    case 'X{N}Y':
+                        const arrows = parseInt(nValue);
+                        const base = new Expantanum(xValue);
+                        const height = parseFloat(yValue);
+                        
+                        if (arrows === 1) {
+                            currentValue = base.pow(height);
+                        } else if (arrows === 2) {
+                            currentValue = base.tetrate(height);
+                        } else if (arrows === 3) {
+                            currentValue = base.pentate(height);
+                        } else {
+                            currentValue = base.arrow(arrows, height);
+                        }
+                        break;
+                }
+                updateDisplay();
+                showIndicator('Number set successfully!');
+            } catch (e) {
+                console.error('Set number error:', e);
+                showIndicator('Error: Invalid input', true);
+            }
+        }
+        
+        // Reset function
+        function reset() {
+            currentValue = new Expantanum(10);
+            arrowCount = 0;
+            kValue = 0;
+            document.getElementById('kInput').value = '0';
+            document.getElementById('arrowXInput').value = '1';
+            updateDisplay();
+            showIndicator('Reset to defaults');
+        }
+        
+        // Show operation indicator
+        function showIndicator(text, isError = false) {
+            const indicator = document.getElementById('indicator');
+            indicator.textContent = text;
+            indicator.style.background = isError ? 'rgba(255, 0, 0, 0.1)' : 'rgba(0, 255, 136, 0.1)';
+            indicator.style.borderColor = isError ? '#ff4444' : '#00ff88';
+            indicator.style.color = isError ? '#ff4444' : '#00ff88';
+            indicator.classList.add('show');
+            
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Update input visibility for number format
+        document.getElementById('formatSelect').addEventListener('change', function() {
+            const format = this.value;
+            const yInput = document.getElementById('yInput');
+            const nInput = document.getElementById('nInput');
+            const xInput = document.getElementById('xInput');
+            
+            yInput.style.display = 'none';
+            nInput.style.display = 'none';
+            
+            switch(format) {
+                case 'X':
+                    xInput.placeholder = 'Enter number';
+                    break;
+                case 'XeY':
+                case 'XeeY':
+                    xInput.placeholder = 'X value';
+                    yInput.placeholder = 'Y value';
+                    yInput.style.display = 'block';
+                    break;
+                case '10^^X':
+                    xInput.placeholder = 'Tetration height';
+                    break;
+                case '10^^^X':
+                    xInput.placeholder = 'Pentation height';
+                    break;
+                case 'X{N}Y':
+                    xInput.placeholder = 'Base (X)';
+                    yInput.placeholder = 'Height (Y)';
+                    nInput.placeholder = 'Arrows (N)';
+                    yInput.style.display = 'block';
+                    nInput.style.display = 'block';
+                    break;
+            }
+        });
+        
+        // Update input visibility for arrow format
+        document.getElementById('arrowFormatSelect').addEventListener('change', function() {
+            const format = this.value;
+            const yInput = document.getElementById('arrowYInput');
+            const xInput = document.getElementById('arrowXInput');
+            
+            yInput.style.display = 'none';
+            
+            switch(format) {
+                case 'X':
+                    xInput.placeholder = 'Arrow count';
+                    break;
+                case 'XeY':
+                    xInput.placeholder = 'X value';
+                    yInput.placeholder = 'Y exponent';
+                    yInput.style.display = 'block';
+                    break;
+                case 'XeeY':
+                    xInput.placeholder = 'X value';
+                    yInput.placeholder = 'Y double exp';
+                    yInput.style.display = 'block';
+                    break;
+            }
+        });
+        
+        // Initial display update
+        updateDisplay();
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT') return;
+            
+            switch(e.key) {
+                case 'e':
+                case 'E':
+                    exponentiate();
+                    break;
+                case 't':
+                case 'T':
+                    tetrate();
+                    break;
+                case 'p':
+                case 'P':
+                    pentrate();
+                    break;
+                case 'a':
+                case 'A':
+                    addArrow();
+                    break;
+                case 'x':
+                case 'X':
+                    executeArrows();
+                    break;
+                case 'r':
+                case 'R':
+                    reset();
+                    break;
+            }
+        });
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('infinityModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
