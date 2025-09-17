@@ -386,13 +386,13 @@
 
     <script>
         // Check if Expantanum is loaded
-        if (typeof Expantanum === 'undefined') {
+        if (typeof ExpantaNum === 'undefined') {
             console.error('Expantanum not loaded!');
             alert('Error: Expantanum library not loaded. Please refresh the page.');
         }
 
         // Initialize with Expantanum
-        let currentValue = new Expantanum(10);
+        let currentValue = new ExpantaNum(10);
         let arrowCount = 0;
         let kValue = 0;
         
@@ -646,7 +646,7 @@
         
         // Reset function
         function reset() {
-            currentValue = new Expantanum(10);
+            currentValue = new ExpantaNum(10);
             arrowCount = 0;
             kValue = 0;
             document.getElementById('kInput').value = '0';
